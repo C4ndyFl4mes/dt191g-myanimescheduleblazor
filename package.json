@@ -1,0 +1,17 @@
+{
+  "name": "myanimescheduleblazor",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tailwindcss -i ./app/wwwroot/css/input.css -o ./app/wwwroot/css/output.css --watch",
+    "build": "tailwindcss -i ./app/wwwroot/css/input.css -o ./app/wwwroot/css/output.css --minify"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.0",
+    "tailwindcss": "^4.2.0"
+  }
+}
