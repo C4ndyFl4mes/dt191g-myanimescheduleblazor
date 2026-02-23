@@ -1,0 +1,32 @@
+@inherits NavigationBase
+
+@namespace app.Components
+
+<nav class="w-screen md:w-full flex justify-center secondary-background-color overflow-hidden py-1">
+    <ul class="flex md:flex-col flex-row-reverse justify-evenly gap-y-5 w-full px-1">
+        <li>
+            <NavLink href="" Match="NavLinkMatch.All" class="flex items-center gap-x-4 justify-center md:justify-normal w-[20vw] md:w-12">
+                <img src="@SelectIcon("animes")" width="48" height="auto" class="@IconPosition flex" />
+                <span class="@Display">Animes</span>
+            </NavLink>
+        </li>
+        <li>
+            <NavLink href="/schedule" Match="NavLinkMatch.All" class="flex items-center gap-x-4 justify-center md:justify-normal w-[20vw] md:w-12">
+                <img src="@SelectIcon("schedule")" width="48" height="auto" class="@IconPosition" />
+                <span class="@Display">Schedule</span>
+            </NavLink>
+        </li>
+        <li>
+            <NavLink href="/account" Match="NavLinkMatch.All" class="flex items-center gap-x-4 justify-center md:justify-normal w-[20vw] md:w-12">
+                <img src="@SelectIcon("account")" width="48" height="auto" class="@IconPosition" />
+                <span class="@Display">Account</span>
+            </NavLink>
+        </li>
+        <li>
+            <NavLink href="/management" Match="NavLinkMatch.All" class="flex items-center gap-x-4 justify-center md:justify-normal w-[20vw] md:w-12">
+                <img src="@SelectIcon("management")" width="48" height="auto" class="@IconPosition" />
+                <span class="@Display">Management</span>
+            </NavLink>
+        </li>
+    </ul>
+</nav>

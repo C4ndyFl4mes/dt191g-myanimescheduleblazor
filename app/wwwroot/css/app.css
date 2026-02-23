@@ -5,14 +5,36 @@ body {
     color: #e0e0e0;
 }
 
+.secondary-background-color {
+    background-color: #FF9D00;
+    color: #000000;
+}
+
+.tertiary-background-color {
+    background-color: #2B2B2B;
+    color: #e0e0e0;
+}
+
+nav>ul>li {
+    border-radius: 0.5rem;
+}
+
+li>.active {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+li:has(>.active) {
+    background-color: #ffffff3b;
+}
+
 h1:focus {
     outline: none;
 }
 
-a,
+/* a,
 .btn-link {
     color: #0071c1;
-}
+} */
 
 .btn-primary {
     color: #fff;

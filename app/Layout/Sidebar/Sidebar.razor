@@ -1,0 +1,17 @@
+@inherits SidebarBase
+
+@namespace app.Components
+
+<aside class="secondary-background-color @WidthClass transition-width ease-in-out duration-300 max-w-screen flex flex-col absolute bottom-0 md:relative">
+    <button title="Sidebar Toggler" class="cursor-pointer h-12 mb-3 hidden md:block" @onclick="ToggleSidebar">
+        @if (collapseSidebar)
+        {
+            <img src="@SelectIcon("chevron-right")" width="48" height="auto" alt="Close" title="Close" class="w-12 aspect-square mx-auto" />
+        }
+        else
+        {
+            <img src="@SelectIcon("chevron-left")" width="48" height="auto" alt="Open" title="Open" class="w-12 aspect-square ms-auto" />
+        }
+    </button>
+    <Navigation ShowText="@collapseSidebar" />
+</aside>
