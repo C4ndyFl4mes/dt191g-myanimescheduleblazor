@@ -17,7 +17,7 @@ public class AccountFormBase : ComponentBase
     [Inject]
     protected SessionService? SessionService { get; set; }
 
-    protected bool _signInOrSignUp { get; set; } = true; // true = sign in, false = sign up
+    protected bool _signInOrSignUp = true; // true = sign in, false = sign up
 
     // Inmatningsfältens bindande variabler:
     protected string _username = string.Empty;
