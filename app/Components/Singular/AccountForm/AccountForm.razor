@@ -1,0 +1,115 @@
+@inherits AccountFormBase
+
+@namespace app.Components.Singular
+
+<div class="max-w-125 mx-auto mt-10 flex flex-col">
+    
+    <button type="button" @onclick="ToggleSignInOrSignUp" class="text-sm golden-text hover:underline ms-auto cursor-pointer">
+        @if (_signInOrSignUp)
+        {
+            <span>Don't have an account? Sign up here.</span>
+        }
+        else
+        {
+            <span>Already have an account? Sign in here.</span>
+        }
+    </button>
+    <form  class="golden-border border-4 rounded-md p-5">
+        <fieldset>
+            @if (_signInOrSignUp)
+            {
+                <legend class="text-2xl ms-auto">Sign In</legend>
+            }
+            else
+            {
+                <legend class="text-2xl ms-auto">Sign Up</legend>
+            }
+            <div class="flex flex-col gap-y-4">
+                @if (!_signInOrSignUp)
+                {
+                    <div class="flex flex-col">
+                        <label for="username-input">Username</label>
+                        <input type="text" id="username-input" name="username-input" @bind="_username" placeholder="..." class="normal-input-field-colors border rounded-md h-10 px-3 text-sm" />
+                        @if (errors.Keys.Contains("Username"))
+                        {
+                            <div class="error-block">
+                                <span>@errors["Username"][0]</span>
+                            </div>
+                        }
+                    </div>
+                }
+                <div class="flex flex-col">
+                    <label for="email-input">Email</label>
+                    <input type="email" id="email-input" name="email-input" @bind="_email" placeholder="..." class="normal-input-field-colors border rounded-md h-10 px-3 text-sm" />
+                    @if (errors.Keys.Contains("Email"))
+                    {
+                        <div class="error-block">
+                            <span>@errors["Email"][0]</span>
+                        </div>
+                    }
+                </div>
+                <div class="flex flex-col">
+                    <label for="password-input">Password</label>
+                    <input type="password" id="password-input" name="password-input" @bind="_password"
+                           placeholder="..." class="normal-input-field-colors border rounded-md h-10 px-3 text-sm" />
+                    @if (errors.Keys.Contains("Password"))
+                    {
+                        <div class="error-block">
+                            @foreach (string error in errors["Password"]) {
+                                <span>@error</span>
+                            }
+                        </div>
+                    }
+                </div>
+                @if (!_signInOrSignUp)
+                {
+                    <div class="flex items-center gap-x-2">
+                        <label for="allowReminders">Allow reminders</label>
+                        <CustomCheckbox Id="allowReminders" Value="@_allowReminders" ValueChanged="@(v => _allowReminders = v)" />
+                    </div>
+                    <div class="flex items-center gap-x-2">
+                        <label for="showExplicitAnimes">Show Explicit Animes</label>
+                        <CustomCheckbox Id="showExplicitAnimes" Value="@_showExplicitAnimes" ValueChanged="@(v => _showExplicitAnimes = v)" />
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="timeZoneSelect">Time Zone <span class="text-sm text-gray-400">(Is this correct?)</span></label>
+                        <CustomSelectbox Id="timeZoneSelect" Value="@_timeZone" ValueChanged="@(v => _timeZone = v)" Options="@_timeZones" />
+                        @if (errors.Keys.Contains("TimeZone"))
+                        {
+                            <div class="error-block">
+                                <span>@errors["TimeZone"]?[0]</span>
+                            </div>
+                        }
+                    </div>
+                    <div>
+                        <span>These settings can be changed later in your profile.</span>
+                    </div>
+                }
+            </div>
+            <div class="mt-10 mb-5 flex justify-center">
+                @if (_signInOrSignUp)
+                {
+                    <button type="button" @onclick="SignIn"
+                            class="secondary-background-color rounded-md px-3 py-1 hover:brightness-95 active:brightness-90 w-[50%]">Sign In</button>
+                }
+                else
+                {
+                    <button type="button" @onclick="SignUp"
+                            class="secondary-background-color rounded-md px-3 py-1 hover:brightness-95 active:brightness-90 w-[50%]">Sign Up</button>
+                }
+            </div>
+            @if (!string.IsNullOrEmpty(_successMessage))
+            {
+                <div class="success-block">
+                    <span>@_successMessage</span>
+                </div>
+            }
+             @if (errors.Keys.Contains("Authentication"))
+            {
+                <div class="error-block">
+                    <span>@errors["Authentication"][0]</span>
+                </div>
+            }
+        </fieldset>
+    </form>
+</div>

@@ -1,0 +1,22 @@
+@inherits CustomSelectboxBase
+
+@namespace app.Components.Shared
+
+<div class="flex flex-col gap-y-1 w-full max-w-80">
+    <div class="relative">
+        <select id="@Id"
+                value="@Value"
+                @onchange="OnValueChanged"
+                class="custom-selectbox normal-input-field-colors golden-border border rounded-md h-10 px-3 pr-10 text-sm w-full appearance-none cursor-pointer">
+            <option value="">Select an option...</option>
+            @foreach (var option in Options)
+            {
+                <option value="@option">@option</option>
+            }
+        </select>
+
+        <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs">
+            ▼
+        </span>
+    </div>
+</div>

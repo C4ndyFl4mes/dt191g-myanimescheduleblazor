@@ -1,0 +1,9 @@
+@inherits CustomCheckboxBase
+
+@namespace app.Components.Shared
+
+<button type="button" id="@Id" @onclick="ToggleValue" class="golden-border border tertiary-background-color rounded-md w-10 aspect-square cursor-pointer">
+    @if(Value) {
+        <img src="@SelectIcon("cross")" alt="Cross" width="60" height="auto" class="w-[inherit] aspect-square" />
+    }
+</button>
