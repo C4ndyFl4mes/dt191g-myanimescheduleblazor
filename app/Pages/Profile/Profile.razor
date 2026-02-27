@@ -1,6 +1,39 @@
 @page "/profile"
 @inherits ProfileBase
 
-<PageTitle>@_title</PageTitle>
+<PageTitle>Profile</PageTitle>
 
-<h1 class="text-3xl">@_title</h1>
+@{
+    ProfileResponse? user = UserStateService?.CurrentUser;
+    string? profileImageUrl = user?.Settings?.ProfileImageURL;
+}
+
+<div class="max-w-250 mx-auto">
+    <h1 class="text-3xl">Profile</h1>
+
+    @if (user is not null)
+    {
+        <div class="flex items-center gap-x-5 golden-border border-4 p-4 rounded-md">
+            <div class="rounded-full tertiary-background-color w-20 aspect-square relative">
+                @if (!string.IsNullOrWhiteSpace(profileImageUrl))
+                {
+                    <img src="@profileImageUrl" width="1000" height="auto" class="rounded-full tertiary-background-color w-20 aspect-square overflow-clip" />
+                }
+
+                <button @onclick="TogglePFPOverlay"
+                        class="w-8 absolute right-0 bottom-0 cursor-pointer hover:brightness-95 active:brightness-90 tertiary-background-color rounded-md">
+                    <img src="@SelectIcon("edit")" width="30" height="auto" alt="Edit pfp" />
+                </button>
+            </div>
+            <div>
+                <p class="text-2xl">@user.Username</p>
+                <p>@user.Role</p>
+            </div>
+        </div>
+    }
+    <SettingsForm />
+</div>
+
+<Overlay IsOpen="ChangePFPOverlayIsOpen" Changed="@(v => ChangePFPOverlayIsOpen = v)">
+    <ChangePFPForm />
+</Overlay>

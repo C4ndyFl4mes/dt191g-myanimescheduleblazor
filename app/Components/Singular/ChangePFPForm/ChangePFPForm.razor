@@ -1,0 +1,52 @@
+@inherits ChangePFPFormBase
+
+@namespace app.Components.Singular
+
+<form class="p-5 pt-0">
+    <fieldset class="flex flex-col gap-y-4">
+        <legend class="text-xl">Set Profile Picture</legend>
+        <div class="max-w-100 flex flex-wrap gap-10 justify-center">
+            <PFPChoice ChoiceName="Frieren" ChoiceImageURL="@SelectPFP("frieren")"
+                       OnSelected="@(v => _currentProfilePicture = v)"
+                       Selected="@(SelectPFP("frieren") == _currentProfilePicture)" />
+            <PFPChoice ChoiceName="Megumin" ChoiceImageURL="@SelectPFP("megumin")"
+                       OnSelected="@(v => _currentProfilePicture = v)"
+                       Selected="@(SelectPFP("megumin") == _currentProfilePicture)" />
+            <PFPChoice ChoiceName="Shiraori" ChoiceImageURL="@SelectPFP("shiraori")"
+                       OnSelected="@(v => _currentProfilePicture = v)"
+                       Selected="@(SelectPFP("shiraori") == _currentProfilePicture)" />
+            <PFPChoice ChoiceName="Terakomari" ChoiceImageURL="@SelectPFP("terakomari")"
+                       OnSelected="@(v => _currentProfilePicture = v)"
+                       Selected="@(SelectPFP("terakomari") == _currentProfilePicture)" />
+            <PFPChoice ChoiceName="Machina" ChoiceImageURL="@SelectPFP("machina")"
+                       OnSelected="@(v => _currentProfilePicture = v)"
+                       Selected="@(SelectPFP("machina") == _currentProfilePicture)" />
+            <PFPChoice ChoiceName="Yumiella" ChoiceImageURL="@SelectPFP("yumiella")"
+                       OnSelected="@(v => _currentProfilePicture = v)"
+                       Selected="@(SelectPFP("yumiella") == _currentProfilePicture)" />
+        </div>
+        <div class="mx-auto mt-10 text-center">
+            <p>Preview</p>
+            <div class="rounded-full tertiary-background-color w-30 aspect-square overflow-clip golden-border border-2">
+                @if (_currentProfilePicture != null)
+                {
+                    <img src="@_currentProfilePicture" width="1000" height="1000" alt="Profile picture preview." />
+                }
+            </div>
+        </div>
+        @if (!string.IsNullOrEmpty(_errorMessage))
+        {
+            <div class="error-block w-fit mx-auto">
+                <span>@_errorMessage</span>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(_successMessage))
+        {
+            <div class="success-block w-fit mx-auto">
+                <span>@_successMessage</span>
+            </div>
+        }
+        <button type="button" @onclick="ChangePFP"
+                class="secondary-background-color rounded-md mx-auto px-3 py-1 hover:brightness-95 active:brightness-90 w-40 cursor-pointer">Save</button>
+    </fieldset>
+</form>

@@ -15,6 +15,14 @@ body {
     color: #e0e0e0;
 }
 
+.overlay-background-color {
+    background-color: #202020;
+}
+
+.overlay-curtains {
+    background-color: #0c0c0cec;
+}
+
 .golden-border {
     border-color: #FF9D00;
 }

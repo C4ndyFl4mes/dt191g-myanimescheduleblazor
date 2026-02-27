@@ -1,0 +1,11 @@
+@inherits PFPChoiceBase
+
+@namespace app.Components.Shared
+
+
+<label class="flex flex-col items-center cursor-pointer">
+    <span>@ChoiceName</span>
+    <button type="button" @onclick="Select" class="rounded-full tertiary-background-color w-20 aspect-square overflow-clip golden-border cursor-pointer @_selectedStyleClass">
+        <img src="@ChoiceImageURL" width="200" height="auto" />
+    </button>
+</label>
