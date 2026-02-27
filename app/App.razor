@@ -1,6 +1,23 @@
-﻿<Router AppAssembly="@typeof(App).Assembly" NotFoundPage="typeof(Pages.NotFound)">
+﻿@using app.DTOs
+@using app.Services
+@inject SessionService SessionService
+@inject UserStateService UserStateService
+
+<Router AppAssembly="@typeof(App).Assembly" NotFoundPage="typeof(Pages.NotFound)">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
     </Found>
 </Router>
+
+@code
+{
+    // Om användaren laddar om sidan kommer UserState att ta information från SessionService.
+    protected override async Task OnInitializedAsync() {
+        ProfileResponse? user = await SessionService.GetSessionProfile();
+        if (user != null)
+        {
+            UserStateService.CurrentUser = user;
+        }
+    }
+}

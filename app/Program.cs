@@ -15,6 +15,7 @@ builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInte
 
 builder.Services.AddBlazoredSessionStorage();
 builder.Services.AddScoped<SessionService>();
+builder.Services.AddScoped<UserStateService>();
 builder.Services.AddScoped<AuthenticationService>();
 builder.Services.AddScoped<ScheduleService>();
 builder.Services.AddScoped<PostService>();

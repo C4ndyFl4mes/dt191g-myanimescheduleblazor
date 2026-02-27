@@ -29,7 +29,7 @@
                 {
                     <div class="flex flex-col">
                         <label for="username-input">Username</label>
-                        <input type="text" id="username-input" name="username-input" @bind="_username" placeholder="..." class="normal-input-field-colors border rounded-md h-10 px-3 text-sm" />
+                        <input type="text" id="username-input" name="username-input" autocomplete="username" @bind="_username" placeholder="..." class="normal-input-field-colors border rounded-md h-10 px-3 text-sm" />
                         @if (errors.Keys.Contains("Username"))
                         {
                             <div class="error-block">
@@ -40,7 +40,7 @@
                 }
                 <div class="flex flex-col">
                     <label for="email-input">Email</label>
-                    <input type="email" id="email-input" name="email-input" @bind="_email" placeholder="..." class="normal-input-field-colors border rounded-md h-10 px-3 text-sm" />
+                    <input type="email" id="email-input" name="email-input" autocomplete="email" @bind="_email" placeholder="..." class="normal-input-field-colors border rounded-md h-10 px-3 text-sm" />
                     @if (errors.Keys.Contains("Email"))
                     {
                         <div class="error-block">
@@ -50,7 +50,7 @@
                 </div>
                 <div class="flex flex-col">
                     <label for="password-input">Password</label>
-                    <input type="password" id="password-input" name="password-input" @bind="_password"
+                    <input type="password" id="password-input" name="password-input" autocomplete="current-password" @bind="_password"
                            placeholder="..." class="normal-input-field-colors border rounded-md h-10 px-3 text-sm" />
                     @if (errors.Keys.Contains("Password"))
                     {
@@ -90,12 +90,12 @@
                 @if (_signInOrSignUp)
                 {
                     <button type="button" @onclick="SignIn"
-                            class="secondary-background-color rounded-md px-3 py-1 hover:brightness-95 active:brightness-90 w-[50%]">Sign In</button>
+                            class="secondary-background-color rounded-md px-3 py-1 hover:brightness-95 active:brightness-90 w-[50%] cursor-pointer">Sign In</button>
                 }
                 else
                 {
                     <button type="button" @onclick="SignUp"
-                            class="secondary-background-color rounded-md px-3 py-1 hover:brightness-95 active:brightness-90 w-[50%]">Sign Up</button>
+                            class="secondary-background-color rounded-md px-3 py-1 hover:brightness-95 active:brightness-90 w-[50%] cursor-pointer">Sign Up</button>
                 }
             </div>
             @if (!string.IsNullOrEmpty(_successMessage))

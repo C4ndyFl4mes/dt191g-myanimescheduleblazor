@@ -12,7 +12,7 @@ public class SessionService(ISessionStorageService _sessionStorageService)
     {
         ProfileResponse? profile = await _sessionStorageService.GetItemAsync<ProfileResponse>(KEY) ?? new()
         {
-            Username = "Not logged in",
+            Username = null,
             Role = "Guest",
             Settings = new()
             {

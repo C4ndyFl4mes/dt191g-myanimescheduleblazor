@@ -16,6 +16,8 @@ public class AccountFormBase : ComponentBase
     protected AuthenticationService? AuthenticationService { get; set; }
     [Inject]
     protected SessionService? SessionService { get; set; }
+    [Inject]
+    protected UserStateService? UserStateService { get; set; }
 
     protected bool _signInOrSignUp = true; // true = sign in, false = sign up
 
@@ -29,7 +31,7 @@ public class AccountFormBase : ComponentBase
 
     protected IEnumerable<string> _timeZones = DateTimeZoneProviders.Tzdb.Ids; // Används för att fylla selectboxen med tidszoner.
     protected Dictionary<string, string[]> errors = []; // Dictionary för att lagra valideringsfel, där nyckeln är fältnamnet och värdet är en array av felmeddelanden.
-    protected string _successMessage = string.Empty;
+    protected string _successMessage = string.Empty; // Denna används inte längre och kommer att tas bort. Det lyckade meddelandet finns i Account sidan.
 
     // Hanterar inloggning av användaren. Validerar först inmatningen och anropar sedan AuthenticationService för att logga in.
     // Om det lyckas, sparas profilinformationen i sessionen. Om det misslyckas, visas ett felmeddelande.
@@ -52,9 +54,15 @@ public class AccountFormBase : ComponentBase
         ApiResult<ProfileResponse> response = await AuthenticationService!.SignIn(request);
         if (response.IsSuccess)
         {
-            _successMessage = "Login successful!";
+            _successMessage = "Sign in successful!";
             errors.Clear();
-            await SessionService!.SetSessionProfile(response.Data!);
+            await SessionService!.SetSessionProfile(response.Data!); // ! ska fungera pga det finns när responsen är lyckad.
+            UserStateService?.CurrentUser = new()
+            {
+                Username = response.Data!.Username,
+                Role = response.Data.Role,
+                Settings = response.Data.Settings
+            };
         }
         else
         {
@@ -94,9 +102,15 @@ public class AccountFormBase : ComponentBase
         ApiResult<ProfileResponse> response = await AuthenticationService!.SignUp(request);
         if (response.IsSuccess)
         {
-            _successMessage = "Registration successful!";
+            _successMessage = "Sign up successful!";
             errors.Clear();
-            await SessionService!.SetSessionProfile(response.Data!);
+            await SessionService!.SetSessionProfile(response.Data!); // ! ska fungera pga det finns när responsen är lyckad.
+            UserStateService?.CurrentUser = new()
+            {
+                Username = response.Data!.Username,
+                Role = response.Data.Role,
+                Settings = response.Data.Settings
+            };
         }
         else
         {

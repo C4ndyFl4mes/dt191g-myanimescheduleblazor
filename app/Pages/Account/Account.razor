@@ -1,8 +1,23 @@
 @page "/account"
 @inherits AccountBase
 
-<PageTitle>@_title</PageTitle>
+<PageTitle>Account</PageTitle>
 
-<h1 class="text-3xl">@_title</h1>
+<h1 class="text-3xl">Account</h1>
 
-<AccountForm />
+@if (UserStateService!.IsLoggedIn())
+{
+    <div class="mx-auto mt-5 w-100 max-w-[90vw]">
+        <div class="text-center">
+            <h2 class="text-2xl golden-text">You're now signed in!</h2>
+            <p>Where to go next?</p>
+        </div>
+        <div class="flex flex-col items-center gap-y-2 mt-4">
+            <button @onclick="@(() => GoTo("/profile"))" class="secondary-background-color rounded-md text-xl font-bold px-3 py-2 hover:brightness-95 active:brightness-90 w-50 max-w-[75%] cursor-pointer">Profile</button>
+            <button @onclick="@(() => GoTo("/schedule"))" class="secondary-background-color rounded-md text-xl font-bold px-3 py-2 hover:brightness-95 active:brightness-90 w-50 max-w-[75%] cursor-pointer">Schedule</button>
+            <button @onclick="@(() => GoTo("/"))" class="secondary-background-color rounded-md text-xl font-bold px-3 py-2 hover:brightness-95 active:brightness-90 w-50 max-w-[75%] cursor-pointer">Browse</button>
+        </div>
+    </div>
+} else {
+    <AccountForm />
+}
