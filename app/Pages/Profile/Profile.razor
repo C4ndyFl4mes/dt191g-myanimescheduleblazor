@@ -8,9 +8,8 @@
     string? profileImageUrl = user?.Settings?.ProfileImageURL;
 }
 
-<div class="max-w-250 mx-auto">
+<div class="max-w-250 mx-auto mb-20 flex flex-col gap-y-5">
     <h1 class="text-3xl">Profile</h1>
-
     @if (user is not null)
     {
         <div class="flex items-center gap-x-5 golden-border border-4 p-4 rounded-md">
@@ -32,6 +31,7 @@
         </div>
     }
     <SettingsForm />
+    <UserInfo Type="OnlyActivities" />
 </div>
 
 <Overlay IsOpen="ChangePFPOverlayIsOpen" Changed="@(v => ChangePFPOverlayIsOpen = v)">

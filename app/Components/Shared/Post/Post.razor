@@ -1,0 +1,32 @@
+@inherits PostBase
+
+@namespace app.Components.Shared
+@using Flurl.Util
+
+<article class="flex flex-col gap-y-2 golden-border border-2 rounded-md p-2 max-w-full">
+    <header class="flex gap-x-4 items-center flex-wrap">
+        @if (ShowProfileImage)
+        {
+            <div class="rounded-full overflow-clip tertiary-background-color w-20">
+                <img src=@Post.ProfileImageURL width="100" height="auto" alt="Profile Image" />
+            </div>
+        }
+        <h3 class="text-xl">@Post.AuthorName</h3>
+    </header>
+    <p>@Post.Content</p>
+    <small class="ms-auto">@Post.LocalDateTime</small>
+    @if (IsViewerOwner)
+    {
+        <div class="mr-auto md:ms-auto md:mr-0 flex gap-4 flex-wrap">
+            <button @onclick=SendUpdateRequest class="secondary-background-color rounded-md ms-auto px-3 py-1 hover:brightness-95 active:brightness-90 w-40 cursor-pointer">Edit</button>
+            <button @onclick=SendDeleteRequest class="secondary-background-color rounded-md ms-auto px-3 py-1 hover:brightness-95 active:brightness-90 w-40 cursor-pointer">Delete</button>
+        </div>
+    }
+    else if (IsViewerModerator)
+    {
+        <div class="mr-auto md:ms-auto md:mr-0">
+            <button  @onclick=SendDeleteRequest class="secondary-background-color rounded-md ms-auto px-3 py-1 hover:brightness-95 active:brightness-90 w-40 cursor-pointer">Delete</button>
+        </div>
+    }
+
+</article>

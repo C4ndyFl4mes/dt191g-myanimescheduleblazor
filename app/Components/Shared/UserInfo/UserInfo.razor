@@ -1,0 +1,65 @@
+@inherits UserInfoBase
+
+@namespace app.Components.Shared
+
+@if (UserStateService is not null && UserStateService.CurrentUser is not null)
+{
+    @if (_userInfo is not null)
+    {
+        <div>
+            <section>
+                <h2 class="text-2xl">Activities</h2>
+                <div class="@ActivityBordered p-4">
+                    @if (_userInfo.Activity.Data.Count == 0)
+                    {
+                        <p>No activity found.</p>
+                    }
+                    else
+                    {
+                        <div class="flex flex-col gap-y-2">
+                            @foreach (PostResponse post in _userInfo.Activity.Data)
+                            {
+                                <Post Post="post" ShowProfileImage=true
+                                      IsViewerOwner="@(UserStateService.CurrentUser.Username == post.AuthorName)"
+                                      IsViewerModerator="@UserStateService.IsModerator()" OnUpdate="@(v => _postUpdatingItem = v)"
+                                      OnDelete="@(v => _postDeletionItem = v)" />
+                            }
+                        </div>
+                        <div class="flex items-center w-fit mt-5 mx-auto">
+                            <button class="secondary-background-color rounded-l-4xl ms-auto px-3 py-1 hover:brightness-95 active:brightness-90 w-fit cursor-pointer"
+                                    title="Previous Page" 
+                                    disabled="@(!_canGoPrevious)"
+                                    @onclick="GoToPreviousPage">
+                                <img src="@SelectIcon("arrow-left")" width="50" height="auto" alt="Arrow Left Icon" />
+                            </button>
+                            <span class="text-xl px-4 py-3 tertiary-background-color">@_userInfo.Activity.Pagination.current_page of
+                                @_userInfo.Activity.Pagination.last_visible_page</span>
+                                <button class="secondary-background-color rounded-r-4xl ms-auto px-3 py-1 hover:brightness-95 active:brightness-90 w-fit cursor-pointer"
+                                        title="Next Page" disabled="@(!_canGoNext)" @onclick="GoToNextPage">
+                                    <img src="@SelectIcon("arrow-right")" width="50" height="auto" alt="Arrow Right Icon" />
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </section>
+            </div>
+        }
+    else
+        {
+            <p>Loading...</p>
+        }
+    }
+    else
+    {
+        <div class="error-block">
+            <span>User is not logged in.</span>
+        </div>
+    }
+
+    <Overlay IsOpen="@(_postUpdatingItem != null)" Changed="@(v => ResetUpdateDelete(v))">
+        <EditPostForm Post="_postUpdatingItem" OnSave="@(v => ReloadPosts(v))" />
+    </Overlay>
+
+    <Overlay IsOpen="@(_postDeletionItem != null)" Changed="@(v => ResetUpdateDelete(v))">
+        <DeletePostForm Post="_postDeletionItem" OnDelete="@(v => ReloadPosts(v))" />
+    </Overlay>

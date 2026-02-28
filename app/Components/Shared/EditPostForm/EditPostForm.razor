@@ -1,0 +1,42 @@
+@inherits EditPostFormBase
+
+@namespace app.Components.Shared
+
+<form class="p-5 pt-0">
+    <fieldset class="flex flex-col gap-y-4">
+        <legend class="text-xl">Edit Post</legend>
+        <div class="flex flex-col">
+            <label for="content-field">Content</label>
+            @if (_updatingPost is not null)
+            {
+                <textarea id="content-field" @bind="_updatingPost.Content" class="w-120 max-w-[80vw] golden-border border rounded-md p-2"></textarea>
+            }
+            @if (errors.Keys.Contains("Content"))
+            {
+                <div class="error-block">
+                    <span>@errors["Content"][0]</span>
+                </div>
+            }
+        </div>
+        <button @onclick=Save type="button"
+                class="secondary-background-color rounded-md ms-auto px-3 py-1 hover:brightness-95 active:brightness-90 w-40 cursor-pointer">Save</button>
+        @if (errors.Keys.Contains("ApiError"))
+        {
+            <div class="error-block">
+                <span>@errors["ApiError"][0]</span>
+            </div>
+        }
+        @if (_errorMessage is not null)
+        {
+            <div class="error-block">
+                <span>@_errorMessage</span>
+            </div>
+        }
+        @if (_successMessage is not null)
+        {
+            <div class="success-block">
+                <span>@_successMessage</span>
+            </div>
+        }
+    </fieldset>
+</form>

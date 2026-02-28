@@ -59,6 +59,10 @@ body {
     border-width: 1px;
 }
 
+button:disabled {
+    filter: brightness(50%);
+}
+
 nav>ul>li {
     border-radius: 0.5rem;
 }

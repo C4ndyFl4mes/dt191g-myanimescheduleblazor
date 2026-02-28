@@ -5,7 +5,7 @@
 @if (IsOpen)
 {
     <div class="fixed inset-0 overlay-curtains transition-opacity">
-        <div class="relative golden-border border-4 w-fit pt-5 mt-20 mx-auto container rounded-md overlay-background-color">
+        <div class="relative golden-border border-4 w-fit pt-5 mt-20 mx-auto container rounded-md overlay-background-color max-w-screen">
             <button @onclick="Close" class="absolute top-0 right-0 cursor-pointer">
                 <img src="@SelectIcon("close")" alt="Close" class="w-6 h-6" />
             </button>

@@ -1,0 +1,30 @@
+@inherits DeletePostFormBase
+
+@namespace app.Components.Shared
+
+<form class="p-5 pt-0">
+    <fieldset class="flex flex-col gap-y-4 w-120 max-w-[80vw]">
+        <legend class="text-xl">Delete Post</legend>
+        @if (Post is not null) {
+            <Post Post="Post" ShowProfileImage="true" IsViewerModerator="false" IsViewerOwner="false" />
+        <button @onclick="Delete" type="button"
+                class="secondary-background-color rounded-md ms-auto px-3 py-1 hover:brightness-95 active:brightness-90 w-40 cursor-pointer">Delete</button>
+        }
+        else
+        {
+            <p>Loading...</p>
+        }
+        @if (_errorMessage is not null)
+        {
+            <div class="error-block">
+                <span>@_errorMessage</span>
+            </div>
+        }
+        @if (_successMessage is not null)
+        {
+            <div class="success-block">
+                <span>@_successMessage</span>
+            </div>
+        }
+    </fieldset>
+</form>
