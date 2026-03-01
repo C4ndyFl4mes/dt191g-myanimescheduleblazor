@@ -13,15 +13,19 @@ public class UserInfoBase : ComponentBase, IDisposable
 
     [Parameter]
     public required string Type { get; set; }
+    [Parameter]
+    public int? UserID { get; set; }
+    [Parameter]
+    public EventCallback<int> OnDelete { get; set; }
 
     protected string ActivityBordered => Type == "OnlyActivities" ? "golden-border border-4 rounded-md" : "";
-    
+    protected string ExtraWide => Type == "Complete" ? "w-250 max-w-full" : "";
+
     protected UserInfoResponse? _userInfo; // Håller reda på den inhämtade informationen.
     protected PostResponse? _postUpdatingItem; // Håller reda på den item som ska ändras.
     protected PostResponse? _postDeletionItem; // Håller reda på den item som ska raderas.
-    protected int _currentPage = 1;
 
-    protected string? _errorMessage;
+    protected Dictionary<string, string[]> errors = [];
 
     // Initialiserar tjänster som UserState och UserService.
     protected override async Task OnInitializedAsync()
@@ -33,7 +37,6 @@ public class UserInfoBase : ComponentBase, IDisposable
 
         if (UserService is not null)
         {
-            await UserService.Initialize();
             await GetUserInfo();
         }
     }
@@ -98,31 +101,47 @@ public class UserInfoBase : ComponentBase, IDisposable
         // Ifall tjänsterna inte är tillgängliga ges ett användarvänligt felmeddelande.
         if (UserStateService is null || UserService is null)
         {
-            _errorMessage = "Service not initialized.";
+            errors = new Dictionary<string, string[]>
+            {
+                { "General", new[] { "User Service is unavailable." } }
+            };
             return;
         }
 
         ApiResult<UserInfoResponse> result = await UserService.GetInfo(new()
         {
+            TargetID = UserID,
             Page = page
         });
 
         if (!result.IsSuccess)
         {
-            _errorMessage = result.Error?.Details?.FirstOrDefault()
-                ?? result.Error?.Title
-                ?? "Failed to load user acitivities.";
+            errors = new Dictionary<string, string[]>
+            {
+                { "General", new[] { result.Error?.Details[0] ?? "An unknown error occurred while getting user info." } }
+            };
             return;
         }
 
         if (result.Data is null)
         {
-            _errorMessage = "Failted to load user acitivities.";
+            errors = new Dictionary<string, string[]>
+            {
+                { "General", new[] { "Unable to get the user data." } }
+            };
             return;
         }
 
-        _errorMessage = null;
+        errors = [];
         _userInfo = result.Data;
+    }
+
+    protected async Task SendDeleteRequest()
+    {
+        if (OnDelete.HasDelegate && UserID is not null)
+        {
+            await OnDelete.InvokeAsync((int)UserID); // Eftersom UserID kan vara null kontrolleras detta innan.
+        }
     }
 
     protected static string SelectIcon(string icon)

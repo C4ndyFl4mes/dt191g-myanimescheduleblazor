@@ -19,10 +19,7 @@ public class DeletePostFormBase : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        if (PostService is not null)
-        {
-            await PostService.Initialize(); // Initierar PostService så att token är tillgänglig för den.
-        }
+        await Task.CompletedTask;
     }
 
     // Raderar posten.

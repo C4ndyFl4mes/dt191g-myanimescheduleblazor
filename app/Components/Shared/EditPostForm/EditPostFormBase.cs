@@ -31,10 +31,6 @@ public class EditPostFormBase : ComponentBase
             Content = Post.Content
         };
 
-        if (PostService is not null)
-        {
-            await PostService.Initialize(); // Initierar PostService så att token är tillgänglig för den.
-        }
     }
 
     // Sparar ändringar.

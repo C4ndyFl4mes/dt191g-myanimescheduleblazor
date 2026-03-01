@@ -63,6 +63,16 @@ button:disabled {
     filter: brightness(50%);
 }
 
+thead>tr {
+    background-color: #252525;
+}
+tbody>tr:nth-child(odd) {
+    background-color: #2B2B2B;
+}
+tbody>tr:nth-child(even) {
+    background-color: #252525;
+}
+
 nav>ul>li {
     border-radius: 0.5rem;
 }

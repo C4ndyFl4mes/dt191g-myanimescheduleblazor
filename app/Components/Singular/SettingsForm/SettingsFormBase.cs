@@ -36,10 +36,6 @@ public class SettingsFormBase : ComponentBase, IDisposable
             }
         }
 
-        if (UserService is not null)
-        {
-            await UserService.Initialize();
-        }
     }
 
     public void Dispose()
@@ -76,9 +72,6 @@ public class SettingsFormBase : ComponentBase, IDisposable
             _errorMessage = "User settings are missing.";
             return;
         }
-
-        // Ser till att token är tillgänglig för autentisering vid uppdatering av inställningar.
-        await UserService.Initialize();
 
         ApiResult<UserSettings> result = await UserService.SetSettings(_settings);
         if (!result.IsSuccess)

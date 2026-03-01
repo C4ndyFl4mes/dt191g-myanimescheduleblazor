@@ -7,25 +7,41 @@ public class PostService(SessionService sessionService)
 {
     private readonly string _baseURL = "http://localhost:5083/api/posts";
     private string? _token { get; set; } = null;
+    private bool _initialized = false;
 
     public async Task Initialize()
     {
+        if (_initialized) return;
+
         ProfileResponse? profile = await sessionService.GetSessionProfile();
-        if (profile != null)
+        _token = profile?.Token;
+        _initialized = true;
+    }
+
+    private async Task EnsureInitialized()
+    {
+        if (!_initialized)
         {
-            _token = profile.Token;
+            await Initialize();
         }
     }
 
     private Dictionary<string, string> GetHttpRequestHeaders(bool hasToBeLoggedIn) =>
-    hasToBeLoggedIn ? new()
-    {
-        { "Content-Type", "application/json" },
-        { "Authorization", $"Bearer {_token}" }
-    } : new()
-    {
-        { "Content-Type", "application/json" }
-    };
+    hasToBeLoggedIn
+        ? !string.IsNullOrWhiteSpace(_token)
+            ? new()
+            {
+                { "Content-Type", "application/json" },
+                { "Authorization", $"Bearer {_token}" }
+            }
+            : new()
+            {
+                { "Content-Type", "application/json" }
+            }
+        : new()
+        {
+            { "Content-Type", "application/json" }
+        };
 
     // Get hämtar en paginerad lista över inlägg för en specifik anime.
     public async Task<ApiResult<DataPaginatedResponse<PostResponse>>> Get(PostGetRequest request)
@@ -56,6 +72,7 @@ public class PostService(SessionService sessionService)
     // Post skapar ett nytt inlägg.
     public async Task<ApiResult<SuccessfulResponse>> Post(PostRequest request)
     {
+        await EnsureInitialized();
         try
         {
             SuccessfulResponse? response = await $"{_baseURL}/send"
@@ -83,13 +100,14 @@ public class PostService(SessionService sessionService)
     // Put uppdaterar ett befintligt inlägg.
     public async Task<ApiResult<SuccessfulResponse>> Put(PostRequest request)
     {
+        await EnsureInitialized();
         try
         {
             SuccessfulResponse? response = await $"{_baseURL}/edit"
                 .WithHeaders(GetHttpRequestHeaders(true))
                 .PutJsonAsync(request)
                 .ReceiveJson<SuccessfulResponse>();
-            
+
             return new ApiResult<SuccessfulResponse>
             {
                 IsSuccess = true,
@@ -110,6 +128,7 @@ public class PostService(SessionService sessionService)
     // Delete tar bort ett specifikt inlägg.
     public async Task<ApiResult<SuccessfulResponse>> Delete(int targetID)
     {
+        await EnsureInitialized();
         try
         {
             SuccessfulResponse? response = await $"{_baseURL}/delete/{targetID}"

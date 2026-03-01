@@ -6,26 +6,45 @@ namespace app.Services;
 public class UserService(SessionService sessionService)
 {
     private readonly string _baseURL = "http://localhost:5083/api/user";
-    private string? _token { get; set; } = null;
+    private string? _token = null;
+    private bool _initialized = false;
 
     public async Task Initialize()
     {
+        if (_initialized) return;
+
         ProfileResponse? profile = await sessionService.GetSessionProfile();
-        if (profile != null)
+        _token = profile?.Token;
+        _initialized = true;
+    }
+
+    private async Task EnsureInitialized()
+    {
+        if (!_initialized)
         {
-            _token = profile.Token;
+            await Initialize();
         }
     }
 
-    private Dictionary<string, string> GetHttpRequestHeaders() => new()
+    private Dictionary<string, string> GetHttpRequestHeaders()
     {
-        { "Content-Type", "application/json" },
-        { "Authorization", $"Bearer {_token}" }
-    };
+        Dictionary<string, string> headers = new()
+        {
+            { "Content-Type", "application/json" }
+        };
+
+        if (!string.IsNullOrWhiteSpace(_token))
+        {
+            headers["Authorization"] = $"Bearer {_token}";
+        }
+
+        return headers;
+    }
 
     // GetInfo hämtar detaljerad information om en specifik användare.
     public async Task<ApiResult<UserInfoResponse>> GetInfo(PostGetRequest request)
     {
+        await EnsureInitialized();
         try
         {
             UserInfoResponse? response = await $"{_baseURL}/info/{request.Page}?targetID={request.TargetID}"
@@ -48,10 +67,11 @@ public class UserService(SessionService sessionService)
             };
         }
     }
-    
+
     // SetSettings uppdaterar användarens inställningar.
     public async Task<ApiResult<UserSettings>> SetSettings(UserSettings settings)
     {
+        await EnsureInitialized();
         try
         {
             UserSettings? response = await $"{_baseURL}/settings"
@@ -79,6 +99,7 @@ public class UserService(SessionService sessionService)
     // List hämtar en paginerad lista över användare.
     public async Task<ApiResult<DataPaginatedResponse<UserItemResponse>>> List(int page)
     {
+        await EnsureInitialized();
         try
         {
             DataPaginatedResponse<UserItemResponse>? response = await $"{_baseURL}/list?page={page}"
@@ -105,6 +126,7 @@ public class UserService(SessionService sessionService)
     // Delete tar bort en specifik användare.
     public async Task<ApiResult<SuccessfulResponse>> Delete(int targetID)
     {
+        await EnsureInitialized();
         try
         {
             SuccessfulResponse? response = await $"{_baseURL}/{targetID}"

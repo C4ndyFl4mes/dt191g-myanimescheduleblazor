@@ -6,60 +6,107 @@
 {
     @if (_userInfo is not null)
     {
-        <div>
-            <section>
-                <h2 class="text-2xl">Activities</h2>
-                <div class="@ActivityBordered p-4">
-                    @if (_userInfo.Activity.Data.Count == 0)
-                    {
-                        <p>No activity found.</p>
-                    }
-                    else
-                    {
-                        <div class="flex flex-col gap-y-2">
-                            @foreach (PostResponse post in _userInfo.Activity.Data)
-                            {
-                                <Post Post="post" ShowProfileImage=true
-                                      IsViewerOwner="@(UserStateService.CurrentUser.Username == post.AuthorName)"
-                                      IsViewerModerator="@UserStateService.IsModerator()" OnUpdate="@(v => _postUpdatingItem = v)"
-                                      OnDelete="@(v => _postDeletionItem = v)" />
-                            }
-                        </div>
-                        <div class="flex items-center w-fit mt-5 mx-auto">
-                            <button class="secondary-background-color rounded-l-4xl ms-auto px-3 py-1 hover:brightness-95 active:brightness-90 w-fit cursor-pointer"
-                                    title="Previous Page" 
-                                    disabled="@(!_canGoPrevious)"
-                                    @onclick="GoToPreviousPage">
-                                <img src="@SelectIcon("arrow-left")" width="50" height="auto" alt="Arrow Left Icon" />
-                            </button>
-                            <span class="text-xl px-4 py-3 tertiary-background-color">@_userInfo.Activity.Pagination.current_page of
-                                @_userInfo.Activity.Pagination.last_visible_page</span>
-                                <button class="secondary-background-color rounded-r-4xl ms-auto px-3 py-1 hover:brightness-95 active:brightness-90 w-fit cursor-pointer"
-                                        title="Next Page" disabled="@(!_canGoNext)" @onclick="GoToNextPage">
-                                    <img src="@SelectIcon("arrow-right")" width="50" height="auto" alt="Arrow Right Icon" />
-                                </button>
+        <div class="@ExtraWide flex flex-col gap-y-5">
+            @if (Type == "Complete")
+            {
+                <section class="flex flex-col p-4">
+                    <h2 class="text-2xl">Profile</h2>
+                    <div class="flex items-center gap-x-5 mt-3 flex-wrap">
+                        @if (@_userInfo.Profile.Settings.ProfileImageURL is not null)
+                        {
+                            <div class="rounded-full overflow-clip tertiary-background-color w-20">
+                                <img src="@_userInfo.Profile.Settings.ProfileImageURL" width="100" height="auto" alt="Profile Image" />
                             </div>
                         }
+                        <div class="flex flex-col">
+                            <p class="text-xl">@_userInfo.Profile.Username</p>
+                            <p>@_userInfo.Profile.Role</p>
+                            <small>@_userInfo.Profile.Settings.TimeZone</small>
+                        </div>
                     </div>
-                </section>
-            </div>
+
+                    <div class="ms-auto my-2">
+                        <button @onclick="async () => await SendDeleteRequest()"
+                                class="secondary-background-color rounded-md px-3 py-1 hover:brightness-95 active:brightness-90 w-40 cursor-pointer">Delete
+                            User</button>
+                        </div>
+                    </section>
+                }
+                <section class="p-4">
+                    <h2 class="text-2xl">Activities</h2>
+                    <div class="@ActivityBordered p-4">
+                        @if (_userInfo.Activity.Data.Count == 0)
+                        {
+                            <p>No activities found.</p>
+                        }
+                        else
+                        {
+                            <div class="flex items-center w-fit my-5 mx-auto h-10">
+                                <button
+                                    class="secondary-background-color rounded-l-4xl ms-auto px-3 h-[inherit] hover:brightness-95 active:brightness-90 w-fit cursor-pointer"
+                                    title="Previous Page" disabled="@(!_canGoPrevious)" @onclick="GoToPreviousPage">
+                                    <img src="@SelectIcon("arrow-left")" width="25" height="auto" alt="Arrow Left Icon" />
+                                </button>
+                                <span
+                                    class="flex items-center text-xl px-4 h-[inherit] tertiary-background-color">@_userInfo.Activity.Pagination.current_page
+                                    of
+                                    @_userInfo.Activity.Pagination.last_visible_page</span>
+                                    <button
+                                        class="secondary-background-color rounded-r-4xl ms-auto px-3 h-[inherit] hover:brightness-95 active:brightness-90 w-fit cursor-pointer"
+                                        title="Next Page" disabled="@(!_canGoNext)" @onclick="GoToNextPage">
+                                        <img src="@SelectIcon("arrow-right")" width="25" height="auto" alt="Arrow Right Icon" />
+                                    </button>
+                                </div>
+                                <div class="flex flex-col gap-y-2">
+                                    @foreach (PostResponse post in _userInfo.Activity.Data)
+                                    {
+                                        <Post Post="post" ShowProfileImage=true
+                                              IsViewerOwner="@(UserStateService.CurrentUser.Username == post.AuthorName)"
+                                              IsViewerModerator="@UserStateService.IsModerator()" OnUpdate="@(v => _postUpdatingItem = v)"
+                                              OnDelete="@(v => _postDeletionItem = v)" />
+                                    }
+                                </div>
+                            }
+
+                        </div>
+                    </section>
+                </div>
+            }
+            else
+            {
+                @if (errors is null)
+                {
+                    <p>Loading...</p>
+                }
+                else if (errors.Keys.Contains("General"))
+                {
+                    <div class="error-block w-full">
+                        @foreach (string e in errors["General"])
+                        {
+                            <span>@e</span>
+                        }
+                    </div>
+                }
+
+            }
         }
     else
         {
-            <p>Loading...</p>
+            @if (errors is not null && errors.Keys.Contains("General"))
+            {
+                <div class="error-block w-full">
+                    @foreach (string e in errors["General"])
+                    {
+                        <span>@e</span>
+                    }
+                </div>
+            }
         }
-    }
-    else
-    {
-        <div class="error-block">
-            <span>User is not logged in.</span>
-        </div>
-    }
 
-    <Overlay IsOpen="@(_postUpdatingItem != null)" Changed="@(v => ResetUpdateDelete(v))">
-        <EditPostForm Post="_postUpdatingItem" OnSave="@(v => ReloadPosts(v))" />
-    </Overlay>
+        <Overlay IsOpen="@(_postUpdatingItem != null)" Changed="@(v => ResetUpdateDelete(v))">
+            <EditPostForm Post="_postUpdatingItem" OnSave="@(v => ReloadPosts(v))" />
+        </Overlay>
 
-    <Overlay IsOpen="@(_postDeletionItem != null)" Changed="@(v => ResetUpdateDelete(v))">
-        <DeletePostForm Post="_postDeletionItem" OnDelete="@(v => ReloadPosts(v))" />
-    </Overlay>
+        <Overlay IsOpen="@(_postDeletionItem != null)" Changed="@(v => ResetUpdateDelete(v))">
+            <DeletePostForm Post="_postDeletionItem" OnDelete="@(v => ReloadPosts(v))" />
+        </Overlay>

@@ -26,10 +26,6 @@ public class ChangePFPFormBase : ComponentBase, IDisposable
             _currentProfilePicture = UserStateService.CurrentUser?.Settings?.ProfileImageURL;
         }
 
-        if (UserService is not null)
-        {
-            await UserService.Initialize();
-        }
     }
 
     // Avslutar prenumerationen på användaren när komponenten inte längre renderas.
@@ -74,9 +70,6 @@ public class ChangePFPFormBase : ComponentBase, IDisposable
             _errorMessage = "Please select a profile picture.";
             return;
         }
-
-        // Ser till att token är tillgänglig för autentisering vid uppdatering av inställningar.
-        await UserService.Initialize();
 
         UserSettings settings = currentUser.Settings;
         settings.ProfileImageURL = _currentProfilePicture; // Uppdaterar profilbilden.
