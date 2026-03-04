@@ -1,0 +1,53 @@
+@inherits ScheduleAddFormBase
+
+@namespace app.Components.Singular
+
+<div class="w-200 max-w-[95vw] px-5 pb-5">
+    <h2 class="text-2xl font-bold mb-2">@AnimeTitle</h2>
+    <form>
+        <fieldset class="flex flex-col gap-y-4">
+            <legend class="text-xl mb-2">Schedule on</legend>
+            <div class="max-w-50 flex flex-col gap-y-2">
+                <div class="flex items-center justify-between">
+                    <label for="onrelease">Release</label>
+                    <CustomRadio Id="onrelease" Name="scheduling" OptionValue="onrelease" @bind-Value="_letMeDecide" />
+                </div>
+                <div class="flex items-center justify-between">
+                    <label for="specified">Let me decide</label>
+                    <CustomRadio Id="specified" Name="scheduling" OptionValue="specified" @bind-Value="_letMeDecide" />
+                </div>
+            </div>
+            @if (_letMeDecide == "specified" && _scheduleForm.WatchDay is not null)
+            {
+                <div class="flex flex-wrap">
+                    <div class="w-fit">
+                        <label for="selectweekday">Weekday</label>
+                        <CustomSelectbox Id="selectweekday" Options="Weekdays" @bind-Value="_scheduleForm.WatchDay" />
+                    </div>
+                    <div class="w-fit">
+                        <label for="watchtime">Time</label>
+                        <input id="watchtime" type="time" @bind-value="_scheduleForm.Time"
+                               class="normal-input-field-colors golden-border border rounded-md h-10 px-3 text-sm w-full" />
+                    </div>
+                </div>
+            }
+            <button @onclick="Save" type="button"
+                    class="secondary-background-color rounded-md ms-auto px-3 py-1 hover:brightness-95 active:brightness-90 w-40 cursor-pointer">Save</button>
+            @if (_errors.Keys.Contains("General"))
+            {
+                <div class="error-block flex flex-col">
+                    @foreach (string e in _errors["General"])
+                    {
+                        <span>@e</span>
+                    }
+                </div>
+            }
+            @if (_successMessage is not null)
+            {
+                <div class="success-block">
+                    <span>@_successMessage</span>
+                </div>
+            }
+        </fieldset>
+    </form>
+</div>

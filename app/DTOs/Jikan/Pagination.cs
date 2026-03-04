@@ -3,6 +3,7 @@ namespace app.DTOs;
 public record Pagination
 {
     public required int last_visible_page { get; set; }
+    public string? last_visible_page_display { get; set; } // Enbart för ? när max antal sidor är okänt i browse.
     public required bool has_next_page { get; set; }
     public required int current_page { get; set; }
     public required Items items { get; set; }

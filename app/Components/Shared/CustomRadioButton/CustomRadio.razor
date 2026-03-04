@@ -1,0 +1,19 @@
+@inherits CustomRadioBase
+
+@namespace app.Components.Shared
+
+<label class="golden-border border tertiary-background-color rounded-full w-10 aspect-square flex items-center justify-center cursor-pointer" for="@Id">
+	<input type="radio"
+		   id="@Id"
+		   name="@Name"
+		   value="@OptionValue"
+		   checked="@IsChecked"
+		   disabled="@Disabled"
+		   @onchange="SelectValue"
+		   class="sr-only" />
+
+	@if (IsChecked)
+	{
+		<span class="secondary-background-color w-6 aspect-square rounded-full"></span>
+	}
+</label>

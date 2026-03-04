@@ -20,5 +20,6 @@ builder.Services.AddScoped<AuthenticationService>();
 builder.Services.AddScoped<ScheduleService>();
 builder.Services.AddScoped<PostService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<JikanService>();
 
 await builder.Build().RunAsync();

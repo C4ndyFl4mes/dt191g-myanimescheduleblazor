@@ -1,0 +1,48 @@
+@inherits AnimeItemBase
+
+@namespace app.Components.Shared
+@using app.Enums
+
+<article @onclick="Inspect" class="max-w-55 flex flex-col p-2 golden-border border-2 rounded-xl overflow-clip cursor-pointer" title="Inspect @Title()">
+    <div class="relative">
+        <div class="aspect-15/22 rounded-t-xl overflow-hidden">
+            <img src="@Anime.Images.Webp.ImageUrl" loading="lazy" width="225" height="320"
+                 class="w-full h-full object-cover @Censor()" />
+        </div>
+        @if (Anime.Genres.Any(g => g.Name == "Hentai"))
+        {
+            <div class="aspect-15/22 absolute top-[25%] z-10">
+                <div class="error-block text-center">
+                    <span>Click to reveal.</span>
+                    <span>Warning, MAL only censors minimal details.</span>
+                </div>
+            </div>
+        }
+
+        @if (InSchedule)
+        {
+            <div class="absolute top-0 right-0 overlay-curtains px-2 py-1 rounded-bl-md rounded-tr-lg z-20">
+                In Schedule
+            </div>
+        }
+        else if (Anime.Status is not null)
+        {
+            <div class="absolute top-0 right-0 overlay-curtains px-2 py-1 rounded-bl-md rounded-tr-lg z-20">
+                @(Anime.Status switch
+                {
+                    EStatus.CurrentlyAiring => "Airing",
+                    EStatus.FinishedAiring => "Finished",
+                    EStatus.NotYetAired => "Upcoming",
+                    _ => "Error"
+                })
+            </div>
+        }
+    </div>
+    <h2 class="wrap-break-word text-center mb-4 mt-1 text-lg md:text-xl">@Title()</h2>
+    <div class="flex flex-wrap justify-center gap-2 mt-auto">
+        @foreach (MalUrl genre in Anime.Genres)
+        {
+            <small class="tertiary-background-color px-2 py-1 rounded-md">@genre.Name</small>
+        }
+    </div>
+</article>

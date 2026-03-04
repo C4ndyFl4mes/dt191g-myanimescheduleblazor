@@ -1,0 +1,221 @@
+@inherits AnimeBase
+
+@namespace app.Components.Shared
+
+<div class="w-210 max-w-[95vw]">
+    <section class="flex flex-col sm:grid anime-grid px-5 mb-5 gap-4">
+        <img src="@Anime.Images.Webp.ImageUrl" loading="eager" width="225" height="330"
+             class="aspect-15/22 max-h-80 cover-position" />
+        <div class="leading-7 description-position">
+            <h2 class="text-2xl mb-1">@Title()</h2>
+            <p>@Excerpt()</p>
+            @if (Anime.Synopsis is not null && Anime.Synopsis.Length >= 350)
+            {
+                <button @onclick="() => _isReadingMore = !_isReadingMore" class="cursor-pointer hover:underline">
+                    Read more
+                </button>
+            }
+        </div>
+        <aside class="info-position flex flex-col gap-y-1 sm:max-w-56.25">
+            <button @onclick="() => _isAddingToSchedule = !_isAddingToSchedule"
+                    class="cursor-pointer w-fit self-center">
+                <img src="@SelectIcon("addschedule")" width="60" height="60" alt="Add to Schedule" />
+            </button>
+            <p>
+                Aired:
+                <span class="font-bold">
+                    @(Anime.Aired.Prop.From is not null && @AiredDate(Anime.Aired.Prop.From) is not null ?
+                AiredDate(Anime.Aired.Prop.From) : "?")
+                </span>
+                to
+                <span class="font-bold">
+                    @(Anime.Aired.Prop.To is not null && @AiredDate(Anime.Aired.Prop.To) is not null ?
+                AiredDate(Anime.Aired.Prop.To) : "?")
+                </span>
+            </p>
+            <p>
+                Season:
+                <span class="font-bold">
+                    @(Anime.Season is null ? "?" : Anime.Season), @(Anime.Year is null ? "?" : Anime.Year)
+                </span>
+            </p>
+            <p>
+                Status:
+                <span class="font-bold">
+                    @Status()
+                </span>
+            </p>
+            <p>
+                Scored:
+                <span class="font-bold">
+                    @(Anime.Score is null ? "?" : Anime.Score)
+                </span>
+                by
+                <span class="font-bold">
+                    @(Anime.ScoredBy is null ? "?" : Anime.ScoredBy)
+                </span>
+                MAL users
+            </p>
+            <p>
+                Rank:
+                <span class="font-bold">
+                    @(Anime.Rank is null ? "?" : Anime.Rank)
+                </span>
+            </p>
+            <p>
+                Rating:
+                <span class="font-bold">
+                    @(Anime.Rating is null ? "?" : Anime.Rating)
+                </span>
+            </p>
+            <p>
+                Source:
+                <span class="font-bold">
+                    @(Anime.Source is null ? "?" : Anime.Source)
+                </span>
+            </p>
+            <p>
+                Type:
+                <span class="font-bold">
+                    @(Anime.Type is null ? "?" : Anime.Type)
+                </span>
+            </p>
+            <p>
+                Duration:
+                <span class="font-bold">
+                    @(Anime.Duration is null ? "?" : Anime.Duration)
+                </span>
+            </p>
+            <p>
+                Episodes:
+                <span class="font-bold">
+                    @(Anime.Episodes is null ? "?" : Anime.Episodes)
+                </span>
+            </p>
+            @if (Anime.Trailer.EmbedUrl is not null)
+            {
+                <button @onclick="() => _isWatchingTrailer = !_isWatchingTrailer"
+                        class="cursor-pointer hover:underline text-left w-fit">Watch Trailer</button>
+            }
+            <a href="@Anime.Url" class="font-bold underline w-fit" target="_blank" title="Open new tab with @Title()">To
+                MAL</a>
+            </aside>
+            <div class="flex flex-wrap gap-5 extra-position">
+                @if (Anime.Genres.Count != 0)
+                {
+                    <div class="w-40 text-center">
+                        <h3 class="text-xl mb-2">Genres</h3>
+                        <ul class="flex flex-col gap-2 flex-wrap">
+                            @for (int i = 0; i < Math.Min(Anime.Genres.Count, 5); i++)
+                            {
+                                <a href="@Anime.Genres[i].Url" target="_blank"
+                                   class="tertiary-background-color px-2 py-1 rounded-md">@Anime.Genres[i].Name</a>
+                            }
+                        </ul>
+                    </div>
+                }
+                @if (Anime.Themes.Count != 0)
+                {
+                    <div class="w-40 text-center">
+                        <h3 class="text-xl mb-2">Themes</h3>
+                        <ul class="flex flex-col gap-2 flex-wrap">
+                            @for (int i = 0; i < Math.Min(Anime.Themes.Count, 3); i++)
+                            {
+                                <a href="@Anime.Themes[i].Url" target="_blank"
+                                   class="tertiary-background-color px-2 py-1 rounded-md">@Anime.Themes[i].Name</a>
+                            }
+                        </ul>
+                    </div>
+                }
+                @if (Anime.Demographics.Count != 0)
+                {
+                    <div class="w-40 text-center">
+                        <h3 class="text-xl mb-2">Demographics</h3>
+                        <ul class="flex flex-col gap-2 flex-wrap">
+                            @for (int i = 0; i < Math.Min(Anime.Demographics.Count, 3); i++)
+                            {
+                                <a href="@Anime.Demographics[i].Url" target="_blank"
+                                   class="tertiary-background-color px-2 py-1 rounded-md">@Anime.Demographics[i].Name</a>
+                            }
+                        </ul>
+                    </div>
+                }
+                @if (Anime.Studios.Count != 0)
+                {
+                    <div class="w-40 text-center">
+                        <h3 class="text-xl mb-2">Studios</h3>
+                        <ul class="flex flex-col gap-2 flex-wrap">
+                            @for (int i = 0; i < Math.Min(Anime.Studios.Count, 3); i++)
+                            {
+                                <a href="@Anime.Studios[i].Url" target="_blank"
+                                   class="tertiary-background-color px-2 py-1 rounded-md">@Anime.Studios[i].Name</a>
+                            }
+                        </ul>
+                    </div>
+                }
+                @if (Anime.Producers.Count != 0)
+                {
+                    <div class="w-40 text-center">
+                        <h3 class="text-xl mb-2">Producers</h3>
+                        <ul class="flex flex-col gap-2 flex-wrap">
+                            @for (int i = 0; i < Math.Min(Anime.Producers.Count, 3); i++)
+                            {
+                                <a href="@Anime.Producers[i].Url" target="_blank"
+                                   class="tertiary-background-color px-2 py-1 rounded-md">@Anime.Producers[i].Name</a>
+                            }
+                        </ul>
+                    </div>
+                }
+                @if (Anime.Licensors.Count != 0)
+                {
+                    <div class="w-40 text-center">
+                        <h3 class="text-xl mb-2">Licensors</h3>
+                        <ul class="flex flex-col gap-2 flex-wrap">
+                            @for (int i = 0; i < Math.Min(Anime.Licensors.Count, 3); i++)
+                            {
+                                <a href="@Anime.Licensors[i].Url" target="_blank"
+                                   class="tertiary-background-color px-2 py-1 rounded-md">@Anime.Licensors[i].Name</a>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        </section>
+        <section class="px-5">
+            <h2 class="text-2xl">Discussion</h2>
+        </section>
+    </div>
+
+    <Overlay IsOpen="@_isReadingMore" Changed="@(v => _isReadingMore = v)">
+        <article class="w-150 max-w-[95vw] px-5 pb-5">
+            <h2 class="text-2xl font-bold mb-2">@Title()</h2>
+            <p class="leading-7">
+                @Anime.Synopsis
+            </p>
+        </article>
+    </Overlay>
+
+    <Overlay IsOpen="@_isWatchingTrailer" Changed="@(v => _isWatchingTrailer = v)">
+        <article class="w-200 max-w-[95vw] px-5 pb-5">
+            <h2 class="text-2xl font-bold mb-2">@Title()</h2>
+            <iframe width="768" height="432" src="@Anime.Trailer.EmbedUrl" allowfullscreen
+                    class="max-w-full aspect-video"></iframe>
+        </article>
+    </Overlay>
+
+    <Overlay IsOpen="@_isAddingToSchedule" Changed="@(v => _isAddingToSchedule = v)">
+        @if (Anime.Aired.From is null)
+        {
+            <article class="w-150 max-w-[95vw] px-5 pb-5">
+                <h2 class="text-2xl font-bold mb-2">@Title()</h2>
+                <div class="error-block">
+                    <span>This anime has yet to have an airing date and cannot be scheduled.</span>
+                </div>
+            </article>
+        }
+        else
+        {
+            <ScheduleAddForm AnimeTitle="@Title()" MalID="Anime.MalId"
+                             OnSave="async () => await OnSaveRelay.InvokeAsync(Anime.MalId)" />
+        }
+    </Overlay>
