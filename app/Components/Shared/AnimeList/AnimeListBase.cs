@@ -125,16 +125,22 @@ public class AnimeListBase : ComponentBase, IDisposable
             {
                 {"General", new[] { "ScheduleService is unavailable." }}
             };
+            await InvokeAsync(StateHasChanged);
             return;
         }
 
         ApiResult<ScheduleResponse> result = await ScheduleService.Get();
         if (!result.IsSuccess)
         {
+            if (result.Error?.StatusCode == 401)
+            {
+                return;
+            }
             _errors = new Dictionary<string, string[]>
                 {
                     { "General", new[] { result.Error?.Details[0] ?? "An unknown error occurred." } }
                 };
+            await InvokeAsync(StateHasChanged);
             return;
         }
 
@@ -144,6 +150,7 @@ public class AnimeListBase : ComponentBase, IDisposable
             {
                 {"General", new[] { "Schedule data is unavailable." }}
             };
+            await InvokeAsync(StateHasChanged);
             return;
         }
 
@@ -156,6 +163,7 @@ public class AnimeListBase : ComponentBase, IDisposable
                     continue;
             }
         }
+        await InvokeAsync(StateHasChanged);
     }
 
     // Uppdaterar UI med att den sparade animen är nu med i schedule.
@@ -163,36 +171,5 @@ public class AnimeListBase : ComponentBase, IDisposable
     {
         if(_animesInSchedule.Add(malID) && _jikanResponse is not null)
             await LoadList(_jikanResponse.Pagination.current_page);
-    }
-
-    // Kollar om användaren kan gå till föregånede sida.
-    protected bool _canGoPrevious =>
-       _jikanResponse is not null &&
-       _jikanResponse.Pagination.current_page > 1;
-
-    // Kollar om användare gå till nästa sida.
-    protected bool _canGoNext =>
-        _jikanResponse is not null &&
-        _jikanResponse.Pagination.current_page < _jikanResponse.Pagination.last_visible_page;
-
-    // Skickar användaren till föregående sida.
-    protected async Task GoToPreviousPage()
-    {
-        if (!_canGoPrevious || _jikanResponse is null) return;
-        int previousPage = _jikanResponse.Pagination.current_page - 1;
-        await LoadList(previousPage);
-    }
-
-    // Skickar användaren till nästa sida.
-    protected async Task GoToNextPage()
-    {
-        if (!_canGoNext || _jikanResponse is null) return;
-        int nextPage = _jikanResponse.Pagination.current_page + 1;
-        await LoadList(nextPage);
-    }
-
-    protected static string SelectIcon(string icon)
-    {
-        return $"icons/{icon}.svg";
     }
 }

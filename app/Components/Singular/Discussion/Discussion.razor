@@ -1,0 +1,29 @@
+@inherits DiscussionBase
+
+@namespace app.Components.Singular
+
+<section class="px-5 mb-5">
+    <h2 class="text-2xl">Discussion</h2>
+    <PostForm TargetID="@MalID" OnPost="@(v => ReloadPosts(v))" />
+    @if (_postData is not null && UserStateService is not null)
+    {
+        <div class="flex flex-col gap-y-4">
+            <Pagination Pagination="_postData.Pagination" PageChanged="@(v => LoadPosts(v))" />
+            @foreach (PostResponse post in _postData.Data)
+            {
+                <Post Post="post"
+                      IsViewerOwner="@(UserStateService.CurrentUser is not null && UserStateService.CurrentUser.Username == post.AuthorName)"
+                      IsViewerModerator="@UserStateService.IsModerator()" ShowProfileImage="true"
+                      OnUpdate="@(v => _postUpdatingItem = v)" OnDelete="@(v => _postDeletionItem = v)" />
+            }
+        </div>
+    }
+</section>
+
+<Overlay IsOpen="@(_postUpdatingItem != null)" Changed="@(v => ResetUpdateDelete(v))">
+    <EditPostForm Post="_postUpdatingItem" OnSave="@(v => ReloadPosts(v))" />
+</Overlay>
+
+<Overlay IsOpen="@(_postDeletionItem != null)" Changed="@(v => ResetUpdateDelete(v))">
+    <DeletePostForm Post="_postDeletionItem" OnDelete="@(v => ReloadPosts(v))" />
+</Overlay>

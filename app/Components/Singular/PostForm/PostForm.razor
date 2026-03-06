@@ -1,0 +1,45 @@
+@inherits PostFormBase
+
+@namespace app.Components.Singular
+
+
+<form>
+    <div class="flex flex-col">
+        <label for="postfield">Make a post</label>
+        @if (_postForm is not null)
+        {
+            <div class="flex gap-x-2 golden-border border-2 rounded-md p-2">
+                <textarea id="postfield" name="postfield" @bind="_postForm.Content" class="w-full p-2"></textarea>
+                <button @onclick="Post" type="button" title="Post to anime"
+                        class="hover:brightness-95 active:brightness-90 cursor-pointer">
+                    <img src="@SelectIcon("post")" width="50" height="auto" alt="Post icon" class="aspect-square" />
+                </button>
+            </div>
+        }
+        else
+        {
+            <textarea id="dummy-textarea"></textarea>
+        }
+        @if (_errors.Keys.Contains("Content"))
+        {
+            <div class="error-block">
+                <span>@_errors["Content"][0]</span>
+            </div>
+        }
+    </div>
+    @if (_errors.Keys.Contains("General"))
+    {
+        <div class="error-block">
+            @foreach (string e in _errors["General"])
+            {
+                <span>@e</span>
+            }
+        </div>
+    }
+    else if (_successMessage is not null)
+    {
+        <div class="success-block">
+            <span>@_successMessage</span>
+        </div>
+    }
+</form>
