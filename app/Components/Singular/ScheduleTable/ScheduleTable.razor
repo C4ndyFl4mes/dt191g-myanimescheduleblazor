@@ -3,7 +3,7 @@
 @namespace app.Components.Singular
 
 <div class="overflow-x-auto w-full golden-border border-4 rounded-xl overflow-clip">
-    <table class="min-w-200 border-collapse">
+    <table class="min-w-200 w-full border-collapse">
         <thead>
             <tr>
                 <th class="px-2 text-xl">Monday</th>
@@ -16,7 +16,7 @@
             </tr>
         </thead>
         <tbody>
-            @if (Schedule is not null)
+            @if (Schedule is not null && IsThereEntriesInSchedule() > 0)
             {
                 <tr>
                     @foreach (ScheduleWeekDayResponse weekday in Schedule.WeekDays)
@@ -30,6 +30,10 @@
                             </div>
                         </td>
                     }
+                </tr>
+            } else {
+                <tr>
+                    <td colspan="8" class="text-center py-10">No schedule entries found.</td>
                 </tr>
             }
         </tbody>

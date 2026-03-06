@@ -52,9 +52,12 @@ public class JikanService
         GetLocalPage("now?continuing", localPage, showExplicitAnime);
 
     // Hämtar nästa säsongs anime.
-    // Unika keys: "upcoming | false" och "upcoming | true" Cachningskombinationer över de fyra dictionaries: 2x4 (8)
-    public Task<ApiResult<JikanResponse>> Upcoming(int localPage, bool showExplicitAnime) =>
-        GetLocalPage("upcoming", localPage, showExplicitAnime);
+    // Unika keys: "year/season | false" och "year/season | true" Cachningskombinationer över de fyra dictionaries: 2x4 (8)
+    public Task<ApiResult<JikanResponse>> Upcoming(int localPage, bool showExplicitAnime)
+    {
+        var (season, year) = GetNextAnimeSeason();
+        return GetLocalPage($"{year}/{season}", localPage, showExplicitAnime);
+    }
 
     // Om jag räknat rätt så kan det vara 24 st cachningar över de fyra dictionaries. Därav sparas varje lista av animes 4 gånger men att dubletter räknas bort. 
     // Tyvärr cachas det inte över gränserna. Eftersom now?continuing också innehåller animes från now sparas mer data än vad som skulle varit mest effektivt.
@@ -153,7 +156,6 @@ public class JikanService
             Url url = $"https://api.jikan.moe/v4/seasons/{endpoint}"
                 .SetQueryParam("page", page);
 
-            // If user does NOT want explicit, use sfw=true
             if (!showExplicitAnime)
                 url = url.SetQueryParam("sfw", "true");
 
@@ -185,5 +187,30 @@ public class JikanService
                 )
             };
         }
+    }
+
+    // Hjälpmetod för att räkna ut nästa anime säsong baserat på nuvarande datum.
+    private (string season, int year) GetNextAnimeSeason()
+    {
+        var now = DateTime.UtcNow;
+        int year = now.Year;
+        int month = now.Month;
+
+        string currentSeason = month switch
+        {
+            >= 1 and <= 3 => "winter",
+            >= 4 and <= 6 => "spring",
+            >= 7 and <= 9 => "summer",
+            _ => "fall"
+        };
+
+        return currentSeason switch
+        {
+            "winter" => ("spring", year),
+            "spring" => ("summer", year),
+            "summer" => ("fall", year),
+            "fall" => ("winter", year + 1),
+            _ => throw new Exception()
+        };
     }
 }

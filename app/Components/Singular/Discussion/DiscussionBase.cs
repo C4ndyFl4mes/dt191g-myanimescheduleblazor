@@ -57,7 +57,7 @@ public class DiscussionBase : ComponentBase, IDisposable
         {
             TargetID = MalID,
             Page = page,
-            TimeZone = NodaTime.DateTimeZoneProviders.Tzdb.GetSystemDefault().Id
+            TimeZone = UserStateService?.CurrentUser?.Settings.TimeZone ?? NodaTime.DateTimeZoneProviders.Tzdb.GetSystemDefault().Id
         };
 
         ApiResult<DataPaginatedResponse<PostResponse>> result = await PostService.Get(request);

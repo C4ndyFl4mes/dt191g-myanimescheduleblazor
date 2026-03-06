@@ -95,4 +95,6 @@ public class ScheduleTableBase : ComponentBase
             _inspectingEntry = null;
         }
     }
+
+    protected int IsThereEntriesInSchedule() => Schedule?.WeekDays.Sum(w => w.ScheduleEntries.Count) ?? 0;
 }
