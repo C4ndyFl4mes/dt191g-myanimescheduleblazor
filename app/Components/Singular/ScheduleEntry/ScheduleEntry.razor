@@ -1,0 +1,15 @@
+@inherits ScheduleEntryBase
+
+@namespace app.Components.Shared
+
+
+<article>
+    <div class="flex justify-between">
+        <p>@Entry.Time</p>
+        <button @onclick="async () => await Inspect()" class="cursor-pointer hover:brightness-95 active:brightness-90">
+            <img src="@SelectIcon("edit")" width="40" height="auto" class="aspect-square" />
+        </button>
+    </div>
+    <img src="@Entry.ImageURL" width="225" height="320" class="aspect-15/22" />
+    <h2 class="text-lg md:text-2xl">@Entry.Title</h2>
+</article>

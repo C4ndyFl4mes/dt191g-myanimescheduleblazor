@@ -1,0 +1,41 @@
+@inherits ScheduleTableBase
+
+@namespace app.Components.Singular
+
+<div class="overflow-x-auto w-full golden-border border-4 rounded-xl overflow-clip">
+    <table class="min-w-200 border-collapse">
+        <thead>
+            <tr>
+                <th class="px-2 text-xl">Monday</th>
+                <th class="px-2 text-xl">Tuesday</th>
+                <th class="px-2 text-xl">Wednesday</th>
+                <th class="px-2 text-xl">Thursday</th>
+                <th class="px-2 text-xl">Friday</th>
+                <th class="px-2 text-xl">Saturday</th>
+                <th class="px-2 text-xl">Sunday</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Schedule is not null)
+            {
+                <tr>
+                    @foreach (ScheduleWeekDayResponse weekday in Schedule.WeekDays)
+                    {
+                        <td class="w-56.25 align-top px-2">
+                            <div class="flex flex-col gap-y-4 items-start">
+                                @foreach (ScheduleEntryResponse entry in weekday.ScheduleEntries)
+                                {
+                                    <ScheduleEntry Entry="entry" OnInspection="@(v => _inspectingEntry = v)" />
+                                }
+                            </div>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<Overlay IsOpen="@(_inspectingEntry is not null)" Changed="@(v => Reload(v))">
+    <ScheduleInspection Entry="@_inspectingEntry" />
+</Overlay>
