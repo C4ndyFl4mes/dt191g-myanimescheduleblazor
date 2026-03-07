@@ -21,4 +21,9 @@ public class HeaderBase : ComponentBase
     {
         return UserStateService?.CurrentUser?.Username ?? "Guest";
     }
+
+    protected string GetProfilePictureUrl()
+    {
+        return UserStateService?.CurrentUser?.Settings.ProfileImageURL ?? "";
+    }
 }
