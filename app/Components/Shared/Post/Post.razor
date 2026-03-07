@@ -7,7 +7,7 @@
     <header class="flex gap-x-4 items-center flex-wrap">
         @if (ShowProfileImage)
         {
-            @if (String.IsNullOrEmpty(Post.ProfileImageURL))
+            @if (!String.IsNullOrEmpty(Post.ProfileImageURL))
             {
                 <div class="rounded-full overflow-clip tertiary-background-color w-20">
                     <img src="@Post.ProfileImageURL" width="100" height="auto" alt="Profile Image" />
