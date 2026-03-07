@@ -1,11 +1,12 @@
 using app.DTOs;
 using Flurl.Http;
+using Microsoft.AspNetCore.Components;
 
 namespace app.Services;
 
-public class UserService(SessionService sessionService)
+public class UserService(SessionService sessionService, NavigationManager navigation)
 {
-    private readonly string _baseURL = "http://localhost:5083/api/user";
+    private readonly string _baseURL = $"{navigation.BaseUri}api/user";
     private string? _token = null;
     private bool _initialized = false;
 

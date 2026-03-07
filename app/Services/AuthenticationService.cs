@@ -1,12 +1,12 @@
-using System.Net;
 using app.DTOs;
 using Flurl.Http;
+using Microsoft.AspNetCore.Components;
 
 namespace app.Services;
 
-public class AuthenticationService
+public class AuthenticationService(NavigationManager navigation)
 {
-    private readonly string _baseURL = "http://localhost:5083/api/user";
+    private readonly string _baseURL = $"{navigation.BaseUri}api/user";
     private readonly Dictionary<string, string> _httpRequestHeaders = new()
     {
         { "Content-Type", "application/json" }

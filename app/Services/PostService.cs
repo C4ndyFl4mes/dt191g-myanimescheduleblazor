@@ -1,11 +1,12 @@
 using app.DTOs;
 using Flurl.Http;
+using Microsoft.AspNetCore.Components;
 
 namespace app.Services;
 
-public class PostService(SessionService sessionService)
+public class PostService(SessionService sessionService, NavigationManager navigation)
 {
-    private readonly string _baseURL = "http://localhost:5083/api/posts";
+    private readonly string _baseURL = $"{navigation.BaseUri}api/posts";
     private string? _token { get; set; } = null;
     private bool _initialized = false;
 

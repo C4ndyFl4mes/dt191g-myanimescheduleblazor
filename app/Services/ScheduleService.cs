@@ -1,11 +1,12 @@
 using app.DTOs;
 using Flurl.Http;
+using Microsoft.AspNetCore.Components;
 
 namespace app.Services;
 
-public class ScheduleService(SessionService sessionService)
+public class ScheduleService(SessionService sessionService, NavigationManager navigation)
 {
-    private readonly string _baseURL = "http://localhost:5083/api/schedule";
+    private readonly string _baseURL = $"{navigation.BaseUri}api/schedule";
     private string? _token { get; set; } = null;
     private bool _initialized = false;
 
