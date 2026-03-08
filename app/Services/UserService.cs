@@ -7,36 +7,19 @@ namespace app.Services;
 public class UserService(SessionService sessionService, NavigationManager navigation)
 {
     private readonly string _baseURL = $"{navigation.BaseUri}api/user";
-    private string? _token = null;
-    private bool _initialized = false;
-
-    public async Task Initialize()
+    private async Task<Dictionary<string, string>> GetHttpRequestHeaders()
     {
-        if (_initialized) return;
-
         ProfileResponse? profile = await sessionService.GetSessionProfile();
-        _token = profile?.Token;
-        _initialized = true;
-    }
+        string? token = profile?.Token;
 
-    private async Task EnsureInitialized()
-    {
-        if (!_initialized)
-        {
-            await Initialize();
-        }
-    }
-
-    private Dictionary<string, string> GetHttpRequestHeaders()
-    {
         Dictionary<string, string> headers = new()
         {
             { "Content-Type", "application/json" }
         };
 
-        if (!string.IsNullOrWhiteSpace(_token))
+        if (!string.IsNullOrWhiteSpace(token))
         {
-            headers["Authorization"] = $"Bearer {_token}";
+            headers["Authorization"] = $"Bearer {token}";
         }
 
         return headers;
@@ -45,11 +28,10 @@ public class UserService(SessionService sessionService, NavigationManager naviga
     // GetInfo hämtar detaljerad information om en specifik användare.
     public async Task<ApiResult<UserInfoResponse>> GetInfo(PostGetRequest request)
     {
-        await EnsureInitialized();
         try
         {
             UserInfoResponse? response = await $"{_baseURL}/info/{request.Page}?targetID={request.TargetID}"
-                .WithHeaders(GetHttpRequestHeaders())
+                .WithHeaders(await GetHttpRequestHeaders())
                 .GetJsonAsync<UserInfoResponse>();
 
             return new ApiResult<UserInfoResponse>
@@ -72,11 +54,10 @@ public class UserService(SessionService sessionService, NavigationManager naviga
     // SetSettings uppdaterar användarens inställningar.
     public async Task<ApiResult<UserSettings>> SetSettings(UserSettings settings)
     {
-        await EnsureInitialized();
         try
         {
             UserSettings? response = await $"{_baseURL}/settings"
-                .WithHeaders(GetHttpRequestHeaders())
+                .WithHeaders(await GetHttpRequestHeaders())
                 .PutJsonAsync(settings)
                 .ReceiveJson<UserSettings>();
 
@@ -100,11 +81,10 @@ public class UserService(SessionService sessionService, NavigationManager naviga
     // List hämtar en paginerad lista över användare.
     public async Task<ApiResult<DataPaginatedResponse<UserItemResponse>>> List(int page)
     {
-        await EnsureInitialized();
         try
         {
             DataPaginatedResponse<UserItemResponse>? response = await $"{_baseURL}/list?page={page}"
-                .WithHeaders(GetHttpRequestHeaders())
+                .WithHeaders(await GetHttpRequestHeaders())
                 .GetJsonAsync<DataPaginatedResponse<UserItemResponse>>();
 
             return new ApiResult<DataPaginatedResponse<UserItemResponse>>
@@ -127,11 +107,10 @@ public class UserService(SessionService sessionService, NavigationManager naviga
     // Delete tar bort en specifik användare.
     public async Task<ApiResult<SuccessfulResponse>> Delete(int targetID)
     {
-        await EnsureInitialized();
         try
         {
             SuccessfulResponse? response = await $"{_baseURL}/{targetID}"
-                .WithHeaders(GetHttpRequestHeaders())
+                .WithHeaders(await GetHttpRequestHeaders())
                 .DeleteAsync()
                 .ReceiveJson<SuccessfulResponse>();
 
