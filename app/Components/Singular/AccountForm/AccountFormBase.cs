@@ -63,6 +63,7 @@ public class AccountFormBase : ComponentBase
                 Role = response.Data.Role,
                 Settings = response.Data.Settings
             };
+            await InvokeAsync(StateHasChanged);
         }
         else
         {
@@ -111,6 +112,7 @@ public class AccountFormBase : ComponentBase
                 Role = response.Data.Role,
                 Settings = response.Data.Settings
             };
+            await InvokeAsync(StateHasChanged);
         }
         else
         {
