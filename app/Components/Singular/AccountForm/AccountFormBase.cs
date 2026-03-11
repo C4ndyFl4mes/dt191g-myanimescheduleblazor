@@ -57,12 +57,7 @@ public class AccountFormBase : ComponentBase
             _successMessage = "Sign in successful!";
             errors.Clear();
             await SessionService!.SetSessionProfile(response.Data!); // ! ska fungera pga det finns när responsen är lyckad.
-            UserStateService?.CurrentUser = new()
-            {
-                Username = response.Data!.Username,
-                Role = response.Data.Role,
-                Settings = response.Data.Settings
-            };
+            UserStateService!.CurrentUser = response.Data;
             await InvokeAsync(StateHasChanged);
         }
         else
@@ -106,12 +101,7 @@ public class AccountFormBase : ComponentBase
             _successMessage = "Sign up successful!";
             errors.Clear();
             await SessionService!.SetSessionProfile(response.Data!); // ! ska fungera pga det finns när responsen är lyckad.
-            UserStateService?.CurrentUser = new()
-            {
-                Username = response.Data!.Username,
-                Role = response.Data.Role,
-                Settings = response.Data.Settings
-            };
+            UserStateService!.CurrentUser = response.Data;
             await InvokeAsync(StateHasChanged);
         }
         else

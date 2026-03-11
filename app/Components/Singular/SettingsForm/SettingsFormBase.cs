@@ -88,7 +88,14 @@ public class SettingsFormBase : ComponentBase, IDisposable
 
         if (SessionService is not null)
         {
-            await SessionService.SetSessionProfile(UserStateService.CurrentUser);
+            ProfileResponse profileToPersist = currentUser;
+            if (string.IsNullOrWhiteSpace(profileToPersist.Token))
+            {
+                ProfileResponse sessionProfile = await SessionService.GetSessionProfile();
+                profileToPersist.Token = sessionProfile.Token;
+            }
+
+            await SessionService.SetSessionProfile(profileToPersist);
         }
         else
         {
