@@ -9,7 +9,7 @@ public class JikanService
     // Cachning av data från Jikan. Det finns åtta olika kombinationer av cachningar (tre olika listor), vilket kan bli mycket.
     // Key (endpoint) prefix + (Show Explicit Anime) suffix exempel: "now || false" -> nuvarande säsong och inte tillåta explicit anime.
     private readonly Dictionary<string, List<Anime>> _itemsByKey = new(); // Cachade anime data. Kan innehålla tre olika listor för now, now?ongoing och upcoming.
-    private readonly Dictionary<string, HashSet<int>> _seenIdsByKey = new(); // MAL idn på animes redan hämtade. HasSet returnerar null vid add ifall ett ID redan hämtad.
+    private readonly Dictionary<string, HashSet<int>> _seenIdsByKey = new(); // MAL idn på animes redan hämtade. HasSet returnerar false vid add ifall ett ID redan hämtad.
     private readonly Dictionary<string, int> _nextApiPageByKey = new(); // Nästa API sida. 
     private readonly Dictionary<string, bool> _hasMoreByKey = new(); // Håller reda på om det finns en nästa API sida som kan hämtas.
 
